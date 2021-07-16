@@ -1,7 +1,13 @@
 fn main() {
-    let x = 2.0; // f64
+    let x: (i32, f64, u8) = (500, 6.4, 1);
 
-    let y: f32 = 3.0; // f32
+    let five_hundred = x.0;
 
-    println!("The value of x and y are: {} and {}", x, y);
+    let six_point_four = x.1;
+
+    let one = x.2;
+    
+    println!("The value of five_hundred: {}", five_hundred);
+    println!("The value of six_point_four: {}", six_point_four);
+    println!("The value of one: {}", one);
 }
