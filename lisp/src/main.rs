@@ -8,7 +8,8 @@ enum Exp {
 } 
 
 #[derive(Clone)]
-struct Env {
+struct Env<'a> {
+  outer: Option<&'a Env<'a>>,
 }
 
 fn eval(_exp: &Exp, _env: &Env) {
@@ -21,8 +22,12 @@ fn read() -> String {
   line
 }
 
+fn default_env<'a>() -> Env<'a> {
+  Env {outer: None}
+}
+
 fn main() {
-  let env = &mut Env{};
+  let env = &mut default_env();
   loop {
     print!("repl> ");
     io::stdout().flush().unwrap();
