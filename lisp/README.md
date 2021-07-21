@@ -1,5 +1,11 @@
 # History
 
+## 2021.7.21
+
+ - enum Err
+ - Improvement of fn eval
+   - fn parse_eval
+
 ## 2021.7.20
 
  - fn default_env
