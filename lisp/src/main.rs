@@ -51,6 +51,7 @@ fn env_get(k: &str, env: &Env) -> Option<Exp> {
 
 fn eval(exp: &Exp, env: &Env) -> Result<Exp, Err> {
     match exp {
+        Exp::Symbol(_s) => Ok(exp.clone()),
         Exp::Symbol(k) => env_get(k, env).ok_or(Err::Reason(format!("unexpected symbol: '{}'", k))),
     }
 }
