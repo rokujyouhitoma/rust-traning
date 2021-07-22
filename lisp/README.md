@@ -1,4 +1,12 @@
+# Purpose
+
+ - Rustに慣れていないので、まずはLISPでも実装しながら覚える
+
 # History
+
+## 2021.7.22
+
+ - impl fmt::Display for Exp
 
 ## 2021.7.21
 

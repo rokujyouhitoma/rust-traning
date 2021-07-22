@@ -1,3 +1,4 @@
+use std::fmt;
 use std::io;
 use std::io::Write;
 
@@ -6,6 +7,15 @@ use std::io::Write;
 enum Exp {
   Symbol(String),
 } 
+
+impl fmt::Display for Exp {
+  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+    let str = match self {
+      Exp::Symbol(s) => s.clone(),
+    };
+    write!(f, "{}", str)
+  }
+}
 
 #[derive(Clone)]
 struct Env<'a> {
@@ -44,9 +54,9 @@ fn main() {
     io::stdout().flush().unwrap();
     let expr = read();
     match parse_eval(expr, env) {
-      Ok_(res) => println!("//"),
+      Ok(res) => println!("{}", res),
       Err(e) => match e {
-        Err::Reason(msg) => println!("// {}", msg),
+        Err::Reason(msg) => println!("{}", msg),
       },
     }
   }
