@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fmt;
 use std::io;
 use std::io::Write;
@@ -18,6 +19,7 @@ impl fmt::Display for Exp {
 
 #[derive(Clone)]
 struct Env<'a> {
+    data: HashMap<String, Exp>,
     outer: Option<&'a Env<'a>>,
 }
 
@@ -33,11 +35,24 @@ fn read() -> String {
 }
 
 fn default_env<'a>() -> Env<'a> {
-    Env { outer: None }
+    let data: HashMap<String, Exp> = HashMap::new();
+    Env { data, outer: None }
 }
 
-fn eval(exp: &Exp, _env: &Env) -> Result<Exp, Err> {
-    Ok(exp.clone())
+fn env_get(k: &str, env: &Env) -> Option<Exp> {
+    match env.data.get(k) {
+        Some(exp) => Some(exp.clone()),
+        None => match &env.outer {
+            Some(outer_env) => env_get(k, &outer_env),
+            None => None,
+        },
+    }
+}
+
+fn eval(exp: &Exp, env: &Env) -> Result<Exp, Err> {
+    match exp {
+        Exp::Symbol(k) => env_get(k, env).ok_or(Err::Reason(format!("unexpected symbol: '{}'", k))),
+    }
 }
 
 fn parse_eval(expr: String, env: &mut Env) -> Result<Exp, Err> {
