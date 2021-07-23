@@ -56,8 +56,22 @@ fn eval(exp: &Exp, env: &Env) -> Result<Exp, Err> {
     }
 }
 
+fn tokenize(expr: String) -> Vec<String> {
+    expr.split_whitespace().map(|x| x.to_string()).collect()
+}
+
+fn parse<'a>(tokens: &'a [String]) -> Result<(Exp, &'a [String]), Err> {
+    let (token, rest) = tokens
+        .split_first()
+        .ok_or(Err::Reason("could not get token".to_string()))?;
+    match &token[..] {
+        _ => Ok((Exp::Symbol(token.clone()), rest)),
+    }
+}
+
 fn parse_eval(expr: String, env: &mut Env) -> Result<Exp, Err> {
-    let evaled_exp = eval(&Exp::Symbol(expr), env)?;
+    let (parsed_exp, _) = parse(&tokenize(expr))?;
+    let evaled_exp = eval(&parsed_exp, env)?;
     Ok(evaled_exp)
 }
 

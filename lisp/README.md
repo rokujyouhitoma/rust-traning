@@ -4,6 +4,12 @@
 
 # History
 
+## 2021.7.23
+
+ - Improvement of `fn parse_eval`
+   - Implement of `fn tokenize`
+   - Implement of `fn parse`
+
 ## 2021.7.22
 
  - `impl fmt::Display for Exp`
