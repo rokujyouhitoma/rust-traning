@@ -6,12 +6,14 @@ use std::io::Write;
 #[derive(Clone)]
 enum Exp {
     Symbol(String),
+    Number(f64),
 }
 
 impl fmt::Display for Exp {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let str = match self {
             Exp::Symbol(s) => s.clone(),
+            Exp::Number(n) => n.to_string(),
         };
         write!(f, "{}", str)
     }
@@ -46,6 +48,7 @@ fn env_get(k: &str, env: &Env) -> Option<Exp> {
 fn eval(exp: &Exp, env: &Env) -> Result<Exp, Err> {
     match exp {
         Exp::Symbol(_s) => Ok(exp.clone()),
+        Exp::Number(_n) => Ok(exp.clone()),
         Exp::Symbol(k) => env_get(k, env).ok_or(Err::Reason(format!("unexpected symbol: '{}'", k))),
     }
 }
