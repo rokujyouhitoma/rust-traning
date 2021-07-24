@@ -28,12 +28,6 @@ enum Err {
     Reason(String),
 }
 
-fn read() -> String {
-    let mut line = String::new();
-    io::stdin().read_line(&mut line).expect("Error: read line");
-    line
-}
-
 fn default_env<'a>() -> Env<'a> {
     let data: HashMap<String, Exp> = HashMap::new();
     Env { data, outer: None }
@@ -73,6 +67,12 @@ fn parse_eval(expr: String, env: &mut Env) -> Result<Exp, Err> {
     let (parsed_exp, _) = parse(&tokenize(expr))?;
     let evaled_exp = eval(&parsed_exp, env)?;
     Ok(evaled_exp)
+}
+
+fn read() -> String {
+    let mut line = String::new();
+    io::stdin().read_line(&mut line).expect("Error: read line");
+    line
 }
 
 fn main() {
