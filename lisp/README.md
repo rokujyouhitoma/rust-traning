@@ -4,6 +4,10 @@
 
 # History
 
+## 2021.7.24
+
+ - Improvement of `Exp`. Support for `Exp.Number`
+
 ## 2021.7.23
 
  - Improvement of `fn parse_eval`
