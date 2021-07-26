@@ -24,6 +24,7 @@ SOFTWARE.
 use std::collections::HashMap;
 use std::fmt;
 use std::io;
+use std::io::Write;
 use std::num::ParseFloatError;
 use std::rc::Rc;
 
@@ -455,7 +456,8 @@ fn slurp_expr() -> String {
 fn main() {
   let env = &mut default_env();
   loop {
-    println!("risp >");
+    print!("risp > ");
+    io::stdout().flush().unwrap();
     let expr = slurp_expr();
     match parse_eval(expr, env) {
       Ok(res) => println!("// 🔥 => {}", res),
