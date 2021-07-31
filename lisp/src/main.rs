@@ -308,9 +308,7 @@ fn env_get(k: &str, env: &Environment) -> Option<Expression> {
 fn parse_list_of_symbol_strings(form: Rc<Expression>) -> Result<Vec<String>, Error> {
     let list = match form.as_ref() {
         Expression::List(s) => Ok(s.clone()),
-        _ => Err(Error::Reason(
-            "expected args form to be a list".to_string(),
-        )),
+        _ => Err(Error::Reason("expected args form to be a list".to_string())),
     }?;
     list.iter()
         .map(|x| match x {
@@ -407,7 +405,7 @@ fn slurp_expr() -> String {
 fn main() {
     let env = &mut default_env();
     loop {
-        print!("risp > ");
+        print!("lisp > ");
         io::stdout().flush().unwrap();
         let expr = slurp_expr();
         match parse_eval(expr, env) {
