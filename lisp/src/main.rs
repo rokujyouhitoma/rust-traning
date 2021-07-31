@@ -72,9 +72,9 @@ enum Error {
 }
 
 #[derive(Clone)]
-struct RispEnv<'a> {
+struct Environment<'a> {
     data: HashMap<String, Expression>,
-    outer: Option<&'a RispEnv<'a>>,
+    outer: Option<&'a Environment<'a>>,
 }
 
 /*
@@ -153,7 +153,7 @@ macro_rules! ensure_tonicity {
     }};
 }
 
-fn default_env<'a>() -> RispEnv<'a> {
+fn default_env<'a>() -> Environment<'a> {
     let mut data: HashMap<String, Expression> = HashMap::new();
     data.insert(
         "+".to_string(),
@@ -198,7 +198,7 @@ fn default_env<'a>() -> RispEnv<'a> {
         Expression::Func(ensure_tonicity!(|a, b| a <= b)),
     );
 
-    RispEnv { data, outer: None }
+    Environment { data, outer: None }
 }
 
 fn parse_list_of_floats(args: &[Expression]) -> Result<Vec<f64>, Error> {
@@ -216,7 +216,7 @@ fn parse_single_float(exp: &Expression) -> Result<f64, Error> {
   Eval
 */
 
-fn eval_if_args(arg_forms: &[Expression], env: &mut RispEnv) -> Result<Expression, Error> {
+fn eval_if_args(arg_forms: &[Expression], env: &mut Environment) -> Result<Expression, Error> {
     let test_form = arg_forms
         .first()
         .ok_or(Error::Reason("expected test form".to_string()))?;
@@ -238,7 +238,7 @@ fn eval_if_args(arg_forms: &[Expression], env: &mut RispEnv) -> Result<Expressio
     }
 }
 
-fn eval_def_args(arg_forms: &[Expression], env: &mut RispEnv) -> Result<Expression, Error> {
+fn eval_def_args(arg_forms: &[Expression], env: &mut Environment) -> Result<Expression, Error> {
     let first_form = arg_forms
         .first()
         .ok_or(Error::Reason("expected first form".to_string()))?;
@@ -282,7 +282,7 @@ fn eval_lambda_args(arg_forms: &[Expression]) -> Result<Expression, Error> {
 fn eval_built_in_form(
     exp: &Expression,
     arg_forms: &[Expression],
-    env: &mut RispEnv,
+    env: &mut Environment,
 ) -> Option<Result<Expression, Error>> {
     match exp {
         Expression::Symbol(s) => match s.as_ref() {
@@ -295,7 +295,7 @@ fn eval_built_in_form(
     }
 }
 
-fn env_get(k: &str, env: &RispEnv) -> Option<Expression> {
+fn env_get(k: &str, env: &Environment) -> Option<Expression> {
     match env.data.get(k) {
         Some(exp) => Some(exp.clone()),
         None => match &env.outer {
@@ -325,8 +325,8 @@ fn parse_list_of_symbol_strings(form: Rc<Expression>) -> Result<Vec<String>, Err
 fn env_for_lambda<'a>(
     params: Rc<Expression>,
     arg_forms: &[Expression],
-    outer_env: &'a mut RispEnv,
-) -> Result<RispEnv<'a>, Error> {
+    outer_env: &'a mut Environment,
+) -> Result<Environment<'a>, Error> {
     let ks = parse_list_of_symbol_strings(params)?;
     if ks.len() != arg_forms.len() {
         return Err(Error::Reason(format!(
@@ -340,17 +340,17 @@ fn env_for_lambda<'a>(
     for (k, v) in ks.iter().zip(vs.iter()) {
         data.insert(k.clone(), v.clone());
     }
-    Ok(RispEnv {
+    Ok(Environment {
         data,
         outer: Some(outer_env),
     })
 }
 
-fn eval_forms(arg_forms: &[Expression], env: &mut RispEnv) -> Result<Vec<Expression>, Error> {
+fn eval_forms(arg_forms: &[Expression], env: &mut Environment) -> Result<Vec<Expression>, Error> {
     arg_forms.iter().map(|x| eval(x, env)).collect()
 }
 
-fn eval(exp: &Expression, env: &mut RispEnv) -> Result<Expression, Error> {
+fn eval(exp: &Expression, env: &mut Environment) -> Result<Expression, Error> {
     match exp {
         Expression::Symbol(k) => {
             env_get(k, env).ok_or(Error::Reason(format!("unexpected symbol k='{}'", k)))
@@ -387,7 +387,7 @@ fn eval(exp: &Expression, env: &mut RispEnv) -> Result<Expression, Error> {
   Repl
 */
 
-fn parse_eval(expr: String, env: &mut RispEnv) -> Result<Expression, Error> {
+fn parse_eval(expr: String, env: &mut Environment) -> Result<Expression, Error> {
     let (parsed_exp, _) = parse(&tokenize(expr))?;
     let evaled_exp = eval(&parsed_exp, env)?;
 
