@@ -39,11 +39,11 @@ enum Expression {
     Number(f64),
     List(Vec<Expression>),
     Func(fn(&[Expression]) -> Result<Expression, Error>),
-    Lambda(RispLambda),
+    Lambda(Lambda),
 }
 
 #[derive(Clone)]
-struct RispLambda {
+struct Lambda {
     params_exp: Rc<Expression>,
     body_exp: Rc<Expression>,
 }
@@ -273,7 +273,7 @@ fn eval_lambda_args(arg_forms: &[Expression]) -> Result<Expression, Error> {
         ));
     }
 
-    Ok(Expression::Lambda(RispLambda {
+    Ok(Expression::Lambda(Lambda {
         body_exp: Rc::new(body_exp.clone()),
         params_exp: Rc::new(params_exp.clone()),
     }))
