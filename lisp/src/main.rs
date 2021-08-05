@@ -28,10 +28,6 @@ use std::io::Write;
 use std::num::ParseFloatError;
 use std::rc::Rc;
 
-/*
-  Types
-*/
-
 #[derive(Clone)]
 enum Expression {
     Bool(bool),
@@ -76,10 +72,6 @@ struct Environment<'a> {
     data: HashMap<String, Expression>,
     outer: Option<&'a Environment<'a>>,
 }
-
-/*
-  Parse
-*/
 
 fn tokenize(expr: String) -> Vec<String> {
     expr.replace("(", " ( ")
@@ -129,10 +121,6 @@ fn parse_atom(token: &str) -> Expression {
         }
     }
 }
-
-/*
-  Env
-*/
 
 macro_rules! ensure_tonicity {
     ($check_fn:expr) => {{
@@ -211,10 +199,6 @@ fn parse_single_float(exp: &Expression) -> Result<f64, Error> {
         _ => Err(Error::Reason("expected a number".to_string())),
     }
 }
-
-/*
-  Eval
-*/
 
 fn eval_if_args(arg_forms: &[Expression], env: &mut Environment) -> Result<Expression, Error> {
     let test_form = arg_forms
@@ -381,10 +365,6 @@ fn eval(exp: &Expression, env: &mut Environment) -> Result<Expression, Error> {
     }
 }
 
-/*
-  Repl
-*/
-
 fn parse_eval(expr: String, env: &mut Environment) -> Result<Expression, Error> {
     let (parsed_exp, _) = parse(&tokenize(expr))?;
     let evaled_exp = eval(&parsed_exp, env)?;
@@ -409,9 +389,9 @@ fn main() {
         io::stdout().flush().unwrap();
         let expr = slurp_expr();
         match parse_eval(expr, env) {
-            Ok(res) => println!("// 🔥 => {}", res),
+            Ok(res) => println!("😚 => {}", res),
             Err(e) => match e {
-                Error::Reason(msg) => println!("// 🙀 => {}", msg),
+                Error::Reason(msg) => println!("🔥 => {}", msg),
             },
         }
     }
