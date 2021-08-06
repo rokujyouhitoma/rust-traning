@@ -34,7 +34,7 @@ enum Expression {
     Symbol(String),
     Number(f64),
     List(Vec<Expression>),
-    Func(fn(&[Expression]) -> Result<Expression, Error>),
+    Function(fn(&[Expression]) -> Result<Expression, Error>),
     Lambda(Lambda),
 }
 
@@ -54,7 +54,7 @@ impl fmt::Display for Expression {
                 let xs: Vec<String> = list.iter().map(|x| x.to_string()).collect();
                 format!("({})", xs.join(","))
             }
-            Expression::Func(_) => "Function {}".to_string(),
+            Expression::Function(_) => "Functiontion {}".to_string(),
             Expression::Lambda(_) => "Lambda {}".to_string(),
         };
 
@@ -145,7 +145,7 @@ fn default_env<'a>() -> Environment<'a> {
     let mut data: HashMap<String, Expression> = HashMap::new();
     data.insert(
         "+".to_string(),
-        Expression::Func(|args: &[Expression]| -> Result<Expression, Error> {
+        Expression::Function(|args: &[Expression]| -> Result<Expression, Error> {
             let sum = parse_list_of_floats(args)?
                 .iter()
                 .fold(0.0, |sum, a| sum + a);
@@ -155,7 +155,7 @@ fn default_env<'a>() -> Environment<'a> {
     );
     data.insert(
         "-".to_string(),
-        Expression::Func(|args: &[Expression]| -> Result<Expression, Error> {
+        Expression::Function(|args: &[Expression]| -> Result<Expression, Error> {
             let floats = parse_list_of_floats(args)?;
             let first = *floats
                 .first()
@@ -167,23 +167,23 @@ fn default_env<'a>() -> Environment<'a> {
     );
     data.insert(
         "=".to_string(),
-        Expression::Func(ensure_tonicity!(|a, b| a == b)),
+        Expression::Function(ensure_tonicity!(|a, b| a == b)),
     );
     data.insert(
         ">".to_string(),
-        Expression::Func(ensure_tonicity!(|a, b| a > b)),
+        Expression::Function(ensure_tonicity!(|a, b| a > b)),
     );
     data.insert(
         ">=".to_string(),
-        Expression::Func(ensure_tonicity!(|a, b| a >= b)),
+        Expression::Function(ensure_tonicity!(|a, b| a >= b)),
     );
     data.insert(
         "<".to_string(),
-        Expression::Func(ensure_tonicity!(|a, b| a < b)),
+        Expression::Function(ensure_tonicity!(|a, b| a < b)),
     );
     data.insert(
         "<=".to_string(),
-        Expression::Func(ensure_tonicity!(|a, b| a <= b)),
+        Expression::Function(ensure_tonicity!(|a, b| a <= b)),
     );
 
     Environment { data, outer: None }
@@ -350,7 +350,7 @@ fn eval(exp: &Expression, env: &mut Environment) -> Result<Expression, Error> {
                 None => {
                     let first_eval = eval(first_form, env)?;
                     match first_eval {
-                        Expression::Func(f) => f(&eval_forms(arg_forms, env)?),
+                        Expression::Function(f) => f(&eval_forms(arg_forms, env)?),
                         Expression::Lambda(lambda) => {
                             let new_env = &mut env_for_lambda(lambda.params_exp, arg_forms, env)?;
                             eval(&lambda.body_exp, new_env)
@@ -360,7 +360,7 @@ fn eval(exp: &Expression, env: &mut Environment) -> Result<Expression, Error> {
                 }
             }
         }
-        Expression::Func(_) => Err(Error::Reason("unexpected form".to_string())),
+        Expression::Function(_) => Err(Error::Reason("unexpected form".to_string())),
         Expression::Lambda(_) => Err(Error::Reason("unexpected form".to_string())),
     }
 }
