@@ -372,7 +372,7 @@ fn parse_eval(expr: String, env: &mut Environment) -> Result<Expression, Error> 
     Ok(evaled_exp)
 }
 
-fn slurp_expr() -> String {
+fn input_expr() -> String {
     let mut expr = String::new();
 
     io::stdin()
@@ -387,7 +387,7 @@ fn main() {
     loop {
         print!("lisp > ");
         io::stdout().flush().unwrap();
-        let expr = slurp_expr();
+        let expr = input_expr();
         match parse_eval(expr, env) {
             Ok(res) => println!("😚 => {}", res),
             Err(e) => match e {
