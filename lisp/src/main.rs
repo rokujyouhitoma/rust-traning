@@ -185,6 +185,18 @@ fn default_env<'a>() -> Environment<'a> {
         "<=".to_string(),
         Expression::Function(ensure_tonicity!(|a, b| a <= b)),
     );
+    data.insert(
+        "print".to_string(),
+        Expression::Function(|args: &[Expression]| -> Result<Expression, Error> {
+            let floats = parse_list_of_floats(args)?;
+            let mut as_str: Vec<String> = Vec::new();
+            for (val) in floats {
+                let raw = format!(r#"{}"#, val);
+                as_str.push(raw);
+            }
+            Ok(Expression::Symbol(as_str.iter().cloned().collect::<String>()))
+        }),
+    );
 
     Environment { data, outer: None }
 }
