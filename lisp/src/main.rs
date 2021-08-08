@@ -194,7 +194,7 @@ fn default_env<'a>() -> Environment<'a> {
                 let raw = format!(r#"{}"#, val);
                 as_str.push(raw);
             }
-            Ok(Expression::Symbol(as_str.iter().cloned().collect::<String>()))
+            Ok(Expression::Symbol(as_str.join(" ")))
         }),
     );
 
