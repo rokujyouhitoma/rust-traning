@@ -190,8 +190,8 @@ fn default_env<'a>() -> Environment<'a> {
         Expression::Function(|args: &[Expression]| -> Result<Expression, Error> {
             let floats = parse_list_of_floats(args)?;
             let mut as_str: Vec<String> = Vec::new();
-            for (val) in floats {
-                let raw = format!(r#"{}"#, val);
+            for float in floats {
+                let raw = format!(r#"{}"#, float);
                 as_str.push(raw);
             }
             Ok(Expression::Symbol(as_str.join(" ")))
