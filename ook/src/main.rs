@@ -1,14 +1,15 @@
 use std::env;
 
-fn entry_point(_filename: String) {
-    println!("{}", _filename);
-}
-
-fn main() {
-    let args: Vec<String> = env::args().collect();
+fn entry_point(args: Vec<String>) {
     if args.len() < 2 {
         println!("You must supply a filename");
         std::process::exit(1);
     }
-    entry_point(args[1].clone());
+    let filename: &String = &args[1];
+    println!("{}", filename);
+}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    entry_point(args);
 }
