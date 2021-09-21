@@ -1,8 +1,11 @@
 use std::env;
 use std::fs::File;
+use std::io::prelude::*;
 
-fn run(_fp: File) {
-    // TODO
+fn run(mut file: &File) {
+    let mut contents = String::new();
+    file.read_to_string(&mut contents);
+    println!("{}", contents);
 }
 
 fn entry_point(args: Vec<String>) -> std::io::Result<()> {
@@ -13,7 +16,7 @@ fn entry_point(args: Vec<String>) -> std::io::Result<()> {
     let filename: &String = &args[1];
     println!("{}", filename);
     let file = File::open(filename)?;
-    run(file);
+    run(&file);
     std::process::exit(0);
 }
 
