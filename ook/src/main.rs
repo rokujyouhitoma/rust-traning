@@ -2,10 +2,19 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
+fn parse(program: String) {
+    println!("{}", program);
+}
+
 fn run(mut file: &File) {
     let mut contents = String::new();
-    file.read_to_string(&mut contents);
-    println!("{}", contents);
+    let res = file.read_to_string(&mut contents);
+    match res {
+        Err(e) => println!("{:?}", e),
+        _ => (),
+    }
+    // TODO
+    parse(contents);
 }
 
 fn entry_point(args: Vec<String>) -> std::io::Result<()> {
