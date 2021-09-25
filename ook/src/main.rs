@@ -1,9 +1,29 @@
+use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
-fn parse(program: String) {
+mod parser {
+    use std::collections::HashMap;
+
+    pub struct Parsed {
+        pub tokens: Vec<String>,
+        pub bracket_map: HashMap<i32, i32>,
+    }
+}
+
+fn mainloop(parsed: parser::Parsed) {
+    // TODO
+    for x in parsed.tokens.iter() {
+        println!("> {}", x);
+    }
+}
+
+fn parse(program: String) -> parser::Parsed {
+    // TODO
     println!("{}", program);
+    let parsed = parser::Parsed { tokens: vec![String::from("Ook! Ook?"), String::from("Ook! Ook.")], bracket_map: HashMap::new()};
+    return parsed;
 }
 
 fn run(mut file: &File) {
@@ -13,8 +33,8 @@ fn run(mut file: &File) {
         Err(e) => println!("{:?}", e),
         _ => (),
     }
-    // TODO
-    parse(contents);
+    let parsed = parse(contents);
+    mainloop(parsed);
 }
 
 fn entry_point(args: Vec<String>) -> std::io::Result<()> {
