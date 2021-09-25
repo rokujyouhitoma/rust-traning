@@ -19,11 +19,29 @@ fn mainloop(parsed: parser::Parsed) {
     }
 }
 
+fn split(program: String) -> Vec<String> {
+    // TODO
+    let tokens: Vec<String> = vec![];
+    return tokens;
+}
+
 fn parse(program: String) -> parser::Parsed {
     // TODO
     println!("{}", program);
-    let parsed = parser::Parsed { tokens: vec![String::from("Ook! Ook?"), String::from("Ook! Ook.")], bracket_map: HashMap::new()};
-    return parsed;
+    let tokens = split(program);
+
+    let parsed = vec![];
+
+    let mut pc: u32 = 0;
+    for token in tokens.iter() {
+        println!("> {}", token);
+        pc += 1;
+    }
+
+    return parser::Parsed {
+        tokens: parsed,
+        bracket_map: HashMap::new(),
+    };
 }
 
 fn run(mut file: &File) {
