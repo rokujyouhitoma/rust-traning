@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
@@ -8,7 +9,7 @@ mod parser {
 
     pub struct Parsed {
         pub tokens: Vec<String>,
-        pub bracket_map: HashMap<i32, i32>,
+        pub bracket_map: HashMap<u32, u32>,
     }
 }
 
@@ -27,15 +28,33 @@ fn split(program: String) -> Vec<String> {
 
 fn parse(program: String) -> parser::Parsed {
     // TODO
-    println!("{}", program);
     let tokens = split(program);
 
-    let parsed = vec![];
+    let parsed: Vec<String> = vec![];
+    let bracket_map: HashMap<u32, u32> = HashMap::new();
+    let leftstack: Vec<u32> = vec![];
 
     let mut pc: u32 = 0;
+
+    let instructions: HashSet<&'static str> = [
+        "Ook. Ook?",
+        "Ook? Ook.",
+        "Ook. Ook.",
+        "Ook! Ook!",
+        "Ook. Ook!",
+        "Ook! Ook.",
+        "Ook! Ook?",
+        "Ook? Ook!",
+    ]
+    .iter()
+    .cloned()
+    .collect();
+
     for token in tokens.iter() {
-        println!("> {}", token);
-        pc += 1;
+        if instructions.contains(token.as_str()) {
+            println!("> {}", token);
+            pc += 1;
+        }
     }
 
     return parser::Parsed {
