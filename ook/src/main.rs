@@ -16,13 +16,21 @@ mod parser {
 fn mainloop(parsed: parser::Parsed) {
     // TODO
     for x in parsed.tokens.iter() {
-        println!("> {}", x);
     }
 }
 
 fn split(program: String) -> Vec<String> {
     // TODO
-    let tokens: Vec<String> = vec![];
+    let mut tokens: Vec<String> = vec![];
+    let fragments: Vec<String> = program.split(" ").map(|s| s.to_string()).collect();
+    let length = fragments.len() / 2;
+    for n in 0..length {
+        let mut s = String::new();
+        s.push_str(&fragments[n * 2]);
+        s.push(' ');
+        s.push_str(&fragments[n * 2 + 1]);
+        tokens.push(s);
+    }
     return tokens;
 }
 
@@ -52,7 +60,7 @@ fn parse(program: String) -> parser::Parsed {
 
     for token in tokens.iter() {
         if instructions.contains(token.as_str()) {
-            println!("> {}", token);
+            println!("{}", token);
             pc += 1;
         }
     }
