@@ -16,11 +16,11 @@ mod parser {
 fn mainloop(parsed: parser::Parsed) {
     // TODO
     for x in parsed.tokens.iter() {
+        println!("{}", x);
     }
 }
 
 fn split(program: String) -> Vec<String> {
-    // TODO
     let mut tokens: Vec<String> = vec![];
     let fragments: Vec<String> = program.split(" ").map(|s| s.to_string()).collect();
     let length = fragments.len() / 2;
@@ -38,7 +38,7 @@ fn parse(program: String) -> parser::Parsed {
     // TODO
     let tokens = split(program);
 
-    let parsed: Vec<String> = vec![];
+    let mut parsed: Vec<String> = vec![];
     let bracket_map: HashMap<u32, u32> = HashMap::new();
     let leftstack: Vec<u32> = vec![];
 
@@ -60,7 +60,7 @@ fn parse(program: String) -> parser::Parsed {
 
     for token in tokens.iter() {
         if instructions.contains(token.as_str()) {
-            println!("{}", token);
+            parsed.push(token.to_string());
             pc += 1;
         }
     }
