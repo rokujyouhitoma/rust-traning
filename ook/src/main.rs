@@ -40,7 +40,7 @@ fn parse(program: String) -> parser::Parsed {
 
     let mut parsed: Vec<String> = vec![];
     let bracket_map: HashMap<u32, u32> = HashMap::new();
-    let leftstack: Vec<u32> = vec![];
+    let mut leftstack: Vec<u32> = vec![];
 
     let mut pc: u32 = 0;
 
@@ -58,9 +58,23 @@ fn parse(program: String) -> parser::Parsed {
     .cloned()
     .collect();
 
+    let mut left: u32 = 0;
+    let mut right: u32 = 0;
     for token in tokens.iter() {
         if instructions.contains(token.as_str()) {
             parsed.push(token.to_string());
+
+            if token.eq("Ook! Ook?") {
+               leftstack.push(pc);
+            } else if token.eq("Ook? Ook!") {
+               left = match leftstack.pop() {
+                     Some(number) => number,
+                     None => 0,
+               };
+               right = pc;
+               // TODO
+            }
+
             pc += 1;
         }
     }
