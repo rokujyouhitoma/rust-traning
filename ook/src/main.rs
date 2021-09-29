@@ -39,7 +39,7 @@ fn parse(program: String) -> parser::Parsed {
     let tokens = split(program);
 
     let mut parsed: Vec<String> = vec![];
-    let bracket_map: HashMap<u32, u32> = HashMap::new();
+    let mut bracket_map: HashMap<u32, u32> = HashMap::new();
     let mut leftstack: Vec<u32> = vec![];
 
     let mut pc: u32 = 0;
@@ -72,7 +72,8 @@ fn parse(program: String) -> parser::Parsed {
                      None => 0,
                };
                right = pc;
-               // TODO
+               bracket_map.insert(left, right);
+               bracket_map.insert(right, left);
             }
 
             pc += 1;
@@ -81,7 +82,7 @@ fn parse(program: String) -> parser::Parsed {
 
     return parser::Parsed {
         tokens: parsed,
-        bracket_map: HashMap::new(),
+        bracket_map: bracket_map,
     };
 }
 
