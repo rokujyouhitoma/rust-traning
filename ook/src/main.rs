@@ -35,7 +35,6 @@ fn split(program: String) -> Vec<String> {
 }
 
 fn parse(program: String) -> parser::Parsed {
-    // TODO
     let tokens = split(program);
 
     let mut parsed: Vec<String> = vec![];
@@ -65,15 +64,15 @@ fn parse(program: String) -> parser::Parsed {
             parsed.push(token.to_string());
 
             if token.eq("Ook! Ook?") {
-               leftstack.push(pc);
+                leftstack.push(pc);
             } else if token.eq("Ook? Ook!") {
-               left = match leftstack.pop() {
-                     Some(number) => number,
-                     None => 0,
-               };
-               right = pc;
-               bracket_map.insert(left, right);
-               bracket_map.insert(right, left);
+                left = match leftstack.pop() {
+                    Some(number) => number,
+                    None => 0,
+                };
+                right = pc;
+                bracket_map.insert(left, right);
+                bracket_map.insert(right, left);
             }
 
             pc += 1;
