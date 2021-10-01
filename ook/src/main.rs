@@ -26,6 +26,22 @@ impl Tape {
         }
     }
 
+    fn get(&mut self) -> u64 {
+        return self.thetape[self.position as usize];
+    }
+
+    fn set(&mut self, val: u64) {
+        self.thetape[self.position as usize] = val;
+    }
+
+    fn inc(&mut self) {
+        self.thetape[self.position as usize] += 1;
+    }
+
+    fn dec(&mut self) {
+        self.thetape[self.position as usize] -= 1;
+    }
+
     fn advance(&mut self) {
         self.position += 1;
         if self.thetape.len() as u64 <= self.position {
