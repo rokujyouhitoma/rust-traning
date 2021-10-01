@@ -13,6 +13,31 @@ mod parser {
     }
 }
 
+struct Tape {
+    position: u64,
+    thetape: Vec<u64>,
+}
+
+impl Tape {
+    fn new() -> Self {
+        Tape {
+            position: 0,
+            thetape: vec![0],
+        }
+    }
+
+    fn advance(&mut self) {
+        self.position += 1;
+        if self.thetape.len() as u64 <= self.position {
+            self.thetape.push(0);
+        }
+    }
+
+    fn devance(&mut self) {
+        self.position -= 1;
+    }
+}
+
 fn mainloop(parsed: parser::Parsed) {
     // TODO
     for x in parsed.tokens.iter() {
