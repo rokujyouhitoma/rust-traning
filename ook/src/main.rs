@@ -9,7 +9,7 @@ mod parser {
 
     pub struct Parsed {
         pub tokens: Vec<String>,
-        pub bracket_map: HashMap<u32, u32>,
+        pub bracket_map: HashMap<u64, u64>,
     }
 }
 
@@ -55,9 +55,30 @@ impl Tape {
 }
 
 fn mainloop(parsed: parser::Parsed) {
-    // TODO
-    for x in parsed.tokens.iter() {
-        println!("{}", x);
+    let mut pc: u64 = 0;
+    let mut tape = Tape::new();
+
+    println!("{}", parsed.tokens.len());
+    for token in parsed.tokens.iter() {
+        println!("{}", token);
+        if token == "Ook. Ook?" {
+            tape.advance();
+        } else if token == "Ook? Ook." {
+            tape.devance();
+        } else if token == "Ook. Ook." {
+            tape.inc();
+        } else if token == "Ook! Ook!" {
+            tape.dec();
+        } else if token == "Ook! Ook." {
+            // print
+            println!("{}", (tape.get() as u8) as char);
+        } else if token == "Ook! Ook?" && tape.get() == 0 {
+            pc = parsed.bracket_map[&pc];
+        } else if token == "Ook? Ook!" && tape.get() != 0 {
+            pc = parsed.bracket_map[&pc];
+        }
+        //println!("{}", token);
+        pc += 1;
     }
 }
 
@@ -79,10 +100,10 @@ fn parse(program: String) -> parser::Parsed {
     let tokens = split(program);
 
     let mut parsed: Vec<String> = vec![];
-    let mut bracket_map: HashMap<u32, u32> = HashMap::new();
-    let mut leftstack: Vec<u32> = vec![];
+    let mut bracket_map: HashMap<u64, u64> = HashMap::new();
+    let mut leftstack: Vec<u64> = vec![];
 
-    let mut pc: u32 = 0;
+    let mut pc: u64 = 0;
 
     let instructions: HashSet<&'static str> = [
         "Ook. Ook?",
@@ -98,8 +119,6 @@ fn parse(program: String) -> parser::Parsed {
     .cloned()
     .collect();
 
-    let mut left: u32 = 0;
-    let mut right: u32 = 0;
     for token in tokens.iter() {
         if instructions.contains(token.as_str()) {
             parsed.push(token.to_string());
@@ -107,11 +126,11 @@ fn parse(program: String) -> parser::Parsed {
             if token.eq("Ook! Ook?") {
                 leftstack.push(pc);
             } else if token.eq("Ook? Ook!") {
-                left = match leftstack.pop() {
+                let left = match leftstack.pop() {
                     Some(number) => number,
                     None => 0,
                 };
-                right = pc;
+                let right = pc;
                 bracket_map.insert(left, right);
                 bracket_map.insert(right, left);
             }
