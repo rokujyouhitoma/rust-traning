@@ -3,6 +3,7 @@ use std::collections::HashSet;
 use std::env;
 use std::fs::File;
 use std::io::prelude::*;
+use std::io::{self, Read};
 
 mod parser {
     use std::collections::HashMap;
@@ -39,7 +40,9 @@ impl Tape {
     }
 
     fn dec(&mut self) {
-        self.thetape[self.position as usize] -= 1;
+       if self.thetape[self.position as usize] > 1 {
+         self.thetape[self.position as usize] -= 1;
+       }
     }
 
     fn advance(&mut self) {
@@ -50,7 +53,9 @@ impl Tape {
     }
 
     fn devance(&mut self) {
-        self.position -= 1;
+        if self.position > 1 {
+          self.position -= 1;
+        }
     }
 }
 
@@ -58,9 +63,7 @@ fn mainloop(parsed: parser::Parsed) {
     let mut pc: u64 = 0;
     let mut tape = Tape::new();
 
-    println!("{}", parsed.tokens.len());
     for token in parsed.tokens.iter() {
-        println!("{}", token);
         if token == "Ook. Ook?" {
             tape.advance();
         } else if token == "Ook? Ook." {
@@ -71,13 +74,17 @@ fn mainloop(parsed: parser::Parsed) {
             tape.dec();
         } else if token == "Ook! Ook." {
             // print
+            println!("{}", tape.get());
             println!("{}", (tape.get() as u8) as char);
+        } else if token == "Ook. Ook!" {
+            let mut buffer = String::new();
+            io::stdin().read_to_string(&mut buffer);
+            tape.set(buffer.parse::<u64>().unwrap());
         } else if token == "Ook! Ook?" && tape.get() == 0 {
             pc = parsed.bracket_map[&pc];
         } else if token == "Ook? Ook!" && tape.get() != 0 {
             pc = parsed.bracket_map[&pc];
         }
-        //println!("{}", token);
         pc += 1;
     }
 }
