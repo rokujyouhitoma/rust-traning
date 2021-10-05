@@ -40,9 +40,9 @@ impl Tape {
     }
 
     fn dec(&mut self) {
-       if self.thetape[self.position as usize] > 1 {
-         self.thetape[self.position as usize] -= 1;
-       }
+        if self.thetape[self.position as usize] > 1 {
+            self.thetape[self.position as usize] -= 1;
+        }
     }
 
     fn advance(&mut self) {
@@ -54,7 +54,7 @@ impl Tape {
 
     fn devance(&mut self) {
         if self.position > 1 {
-          self.position -= 1;
+            self.position -= 1;
         }
     }
 }
